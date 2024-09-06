@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using ForUDP;
 using TMPro;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class RecvManager : MonoBehaviour
 {
     private UDP_recv commUDP = new UDP_recv();
     [SerializeField] int port_rcv;
     [SerializeField] TextMeshProUGUI logText;
+
+    [SerializeField] bool notRecv = false;
+
 
     //ハンドルの入力値
     //アクセルの入力値
@@ -20,6 +24,11 @@ public class RecvManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (notRecv)
+        {
+            return;
+        }
+
         //commUDP.init(int型の送信用ポート番号, int型の送信先ポート番号, int型の受信用ポート番号);
         commUDP.init(port_rcv);
         commUDP.start_receive();
@@ -27,12 +36,19 @@ public class RecvManager : MonoBehaviour
 
     private void Update()
     {
+        if (notRecv)
+        {
+            commUDP.rcv_float_arr[0] = Input.GetAxis("Horizontal");
+            commUDP.rcv_float_arr[2] = Input.GetAxis("Vertical");
+            return;
+        }
+
         receive();
     }
 
     public void receive()
     {
-        commUDP.start_receive();
+        //commUDP.start_receive();
         var b = commUDP.rcv_float_arr;
         string recvStr = "";
 

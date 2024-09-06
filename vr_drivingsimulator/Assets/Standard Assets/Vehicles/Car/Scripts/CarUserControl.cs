@@ -9,7 +9,6 @@ namespace UnityStandardAssets.Vehicles.Car
     {
         private CarController m_Car; // the car controller we want to use
         private RecvManager m_recvManager;
-
         private void Awake()
         {
             // get the car controller
@@ -20,6 +19,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
         private void FixedUpdate()
         {
+
             //元々はここでコントローラの入力を取得
             //float h = CrossPlatformInputManager.GetAxis("Horizontal");
             //float v = CrossPlatformInputManager.GetAxis("Vertical");

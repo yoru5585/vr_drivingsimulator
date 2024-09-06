@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 #pragma warning disable 649
@@ -51,6 +52,7 @@ namespace UnityStandardAssets.Vehicles.Car
         //シフトレバー切り替え
         int Cgear = 1;
         private RecvManager m_recvManager;
+        [SerializeField] TextMeshProUGUI gearText;
 
         public bool Skidding { get; private set; }
         public float BrakeInput { get; private set; }
@@ -213,18 +215,21 @@ namespace UnityStandardAssets.Vehicles.Car
                     {
                         //変更点
                         m_WheelColliders[i].motorTorque = thrustTorque;
+                        Debug.Log(Cgear);
                         
                         //ここから
-                        //m_WheelColliders[i].motorTorque = thrustTorque * Cgear;
-                        //if (m_recvManager.GetRgear() == 1)
-                        //{
-                        //    Cgear = -1;
-                        //}
+                        m_WheelColliders[i].motorTorque = thrustTorque * Cgear;
+                        if (m_recvManager.GetRgear() > 0.5f)
+                        {
+                            Cgear = -1;
+                            gearText.text = "R";
+                        }
 
-                        //if (m_recvManager.GetDgear() == 1)
-                        //{
-                        //    Cgear = 1;
-                        //}
+                        if (m_recvManager.GetDgear() > 0.5f)
+                        {
+                            Cgear = 1;
+                            gearText.text = "D";
+                        }
                         //ここまで
 
                     }
@@ -244,8 +249,8 @@ namespace UnityStandardAssets.Vehicles.Car
 
             for (int i = 0; i < 4; i++)
             {
-                if (CurrentSpeed > 5 && Vector3.Angle(transform.forward, m_Rigidbody.velocity) < 50f)
-                //if(CurrentSpeed >= 0)
+                //if (CurrentSpeed > 5 && Vector3.Angle(transform.forward, m_Rigidbody.velocity) < 50f)
+                if(CurrentSpeed >= 0)
                 {
                     m_WheelColliders[i].brakeTorque = m_BrakeTorque*footbrake;
                 }
